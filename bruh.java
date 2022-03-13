@@ -51,3 +51,25 @@ class HeartbeatAgent extends Thread{
     }
 }
 
+public class ElectionScheduler<ID extends Serializable> {
+        int electionTimeoutMs=1000;
+        private volatile boolean timeoutsRunning = false;
+        
+        private void scheduleElectionTimeout() {
+            
+            System.out.println("Starting election timeout for current node", node.getId());
+            timeoutsRunning = true;
+            long next = this.electionTimeoutMs + random.nextInt(rangeSize);
+            nextElectionTimeout.set(scheduledExecutorService.schedule(
+                    this::performElectionTimeout,
+                    next,
+                    MILLISECONDS));
+        }
+        
+        private void performElectionTimeout() {
+            System.out.println("Election timeout occurred: server {}", server.getId());
+            node.startNewElection();
+            timeoutsRunning = false;
+        }
+    }
+
