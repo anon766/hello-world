@@ -19,4 +19,35 @@ if(check_node_availaibility(replication_Group_Id))
         commit_transaction_to_log(client_query);
 }
 
+class HeartbeatAgent extends Thread{
+    Socket heartbeat;
+    DataOutputStream out=null;
+    HeartbeatAgent(Socket heartbeat) throws IOException
+    {
+        this.heartbeat=heartbeat;
+        out=new DataOutputStream(heartbeat.getOutputStream());
+    }
+    @Override
+    public void run()
+    {
+        System.out.println("Starting heartbeat thread");
+        while(!Thread.interrupted()){
+            try{
+                out.writeUTF("Active");
+                Thread.sleep(2000);
+            }
+            catch(IOException e)
+            {
+                System.out.println("Heartbeat sending failed server down");
+                e.printStackTrace();
+                break;
+            }
+            catch(InterruptedException e)
+            {
+                System.out.println("Heart Beat Thread Stopping\n");
+                break;
+            }
+        }
+    }
+}
 
