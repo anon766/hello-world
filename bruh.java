@@ -1,3 +1,13 @@
+int check_node_availaibility(int replication_Group_Id)
+{
+     int c=0;
+     for(int j=replication_Group_Id;j<9;j+=3)
+         if(CentralServer.available[j]==true)
+             c++;
+     if(c<2)
+         return 0;
+     return c;
+ }
 
 
 if(check_node_availaibility(replication_Group_Id))
@@ -10,13 +20,3 @@ if(check_node_availaibility(replication_Group_Id))
 }
 
 
-int check_node_availaibility(int replication_Group_Id)
-{
-     int c=0;
-     for(int j=replication_Group_Id;j<9;j+=3)
-         if(CentralServer.available[j]==true)
-             c++;
-     if(c<2)
-         return 0;
-     return c;
- }
